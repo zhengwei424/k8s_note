@@ -106,32 +106,27 @@
 
 懒人脚本：(自动拉取镜像，特换标签，删除镜像)
 
+docker-wrapper
+
 ```python
-#!/usr/bin/python
-# coding=utf8
-# utf8 without BOM
+#!/bin/env python
+# _*_coding: utf-8 _*_
 
 import os
 import sys
 
-#  gcr.io/xxx/yyy:zzz -> gcr.azk8s.cn/xxx/yyy:zzz, for example gcr.io/google_containers/kube-apiserver:v1.14.1
-#  k8s.gcr.io/xxx:yyy => gcr.io/google-containers/xxx:yyy -> gcr.azk8s.cn/google-containers/xxx:yyy, for example k8s.gcr.io/kube-apiserver:v1.14.1
-#  quay.io/xxx/yyy:zzz -> quay.azk8s.cn/xxx/yyy:zzz, for example quay.io/coreos/flannel:v0.10.0-amd64
-
 converts = [
     {
-        'prefix': 'gcr.io',
-        'replace': lambda x: x.replace('gcr.io', 'gcr.azk8s.cn'),
+        'prefix': ['gcr.io', 'k8s.gcr.io'],
+        'replace': ['gcr.azk8s.cn/google_containers', 'registry.cn-hangzhou.aliyuncs.com/google_containers',
+                    'mirrorgooglecontainers']
     },
     {
-        'prefix': 'k8s.gcr.io',
-        'replace': lambda x: x.replace('k8s.gcr.io', 'gcr.azk8s.cn/google-containers'),
-    },
-    {
-        'prefix': 'quay.io',
-        'replace': lambda x: x.replace('quay.io', 'quay.azk8s.cn'),
+        'prefix': ['docker.io'],
+        'replace': ['dockerhub.azk8s.cn']
     }
 ]
+
 
 def execute_sys_cmd(cmd):
     result = os.system(cmd)
@@ -139,8 +134,10 @@ def execute_sys_cmd(cmd):
         print(cmd + " failed.")
         sys.exit(-1)
 
+
 def usage():
     print("Usage: " + sys.argv[0] + " pull ${image}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
@@ -149,38 +146,33 @@ if __name__ == "__main__":
 
     image = sys.argv[2]
     imageArray = image.split("/")
-   
-    newImage = '' 
+
+    newImage = ''
     for cvt in converts:
-        if imageArray[0] == cvt['prefix']:
-            newImage = cvt['replace'](image)
-            break
-    if newImage:
-        print("-- pull {image} from {newimage} instead --".format(image=image, newimage=newImage))
-        cmd = "docker pull {image}".format(image=newImage)
-        execute_sys_cmd(cmd)
-     
-        cmd = "docker tag {newImage} {image}".format(newImage=newImage, image=image)
-        execute_sys_cmd(cmd)
-       
-        cmd = "docker rmi {newImage}".format(newImage=newImage)
-        execute_sys_cmd(cmd)
-       
-        print("-- pull {image} done --".format(image=image))
-        sys.exit(0)
-    else:
-        cmd = "docker pull {image}".format(image=image)
-        execute_sys_cmd(cmd)
-        sys.exit(0)
-```
+        if imageArray[0] in cvt['prefix']:
+            for i in cvt['replace']:
+                newImage = image.replace(imageArray[0], i)
+                if newImage:
+                    print("-- pull {image} from {newimage} instead --".format(image=image, newimage=newImage))
+                    cmd = "docker pull {image}".format(image=newImage)
+                    try:
+                        execute_sys_cmd(cmd)
+                    except SystemExit as e:
+                        print("'{}' is failed").format(cmd)
+                        continue
 
+                    cmd = "docker tag {newImage} {image}".format(newImage=newImage, image=image)
+                    execute_sys_cmd(cmd)
 
+                    cmd = "docker rmi {newImage}".format(newImage=newImage)
+                    execute_sys_cmd(cmd)
 
-安装：
-
-```shell
-# git clone https://github.com/silenceshell/docker-wrapper.git
-# sudo cp docker-wrapper/docker-wrapper.py /usr/local/bin/
+                    print("-- pull {image} done --".format(image=image))
+                    sys.exit(0)
+        else:
+            cmd = "docker pull {image}".format(image=image)
+            execute_sys_cmd(cmd)
+            sys.exit(0)
 ```
 
 
