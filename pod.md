@@ -211,7 +211,7 @@ spec:
 
 我们可以通过kubectl describe相关的node，查询到node节点的资源使用情况
 
-<img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200323135031552.png" alt="image-20200323135031552"  />
+<img src="pod.assets/image-20200323135031552.png" alt="image-20200323135031552"  />
 
 ## pod启动命令command
 
@@ -403,7 +403,7 @@ LivenessProbe和ReadinessProbe均可配置一下三种实现方式：
 
    输出结果：
 
-   ![image-20200323185641582](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200323185641582.png)
+   ![image-20200323185641582](pod.assets/image-20200323185641582.png)
 
    
 
@@ -968,7 +968,7 @@ spec:
 
 在rc生成的pod实例中，修改pod的labels，就可以将pod从rc的管理中移除（此时rc会新创建一个pod），主要用于删除pod进行调试、数据恢复等
 
-![image-20200407125503557](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200407125503557.png)
+![image-20200407125503557](pod.assets/image-20200407125503557.png)
 
 ### 4. 裸pod运行
 
@@ -1205,7 +1205,7 @@ kubectl set image deployment.v1.apps/nginx-deployment nginx=nginx:1.9.1 --record
 
 --record表示：会将上面这条kubectl更新命令写入到deployment的yaml文件中的annotations里：
 
-![image-20200324170356577](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200324170356577.png)
+![image-20200324170356577](pod.assets/image-20200324170356577.png)
 
 更新结果：
 
@@ -1292,7 +1292,7 @@ Pod 水平自动伸缩（Horizontal Pod Autoscaler）特性， 可以基于CPU�
 
 自动伸缩原理：
 
-![水平自动伸缩示意图](https://d33wubrfki0l68.cloudfront.net/4fe1ef7265a93f5f564bd3fbb0269ebd10b73b4e/1775d/images/docs/horizontal-pod-autoscaler.svg)
+![水平自动伸缩示意图](pod.assets/horizontal-pod-autoscaler.svg)
 
 pod的水平自动伸缩式一个控制循环，由controller manager的`--horizontal-pod-autoscaler-sync-period` 参数指定周期（默认值为15秒）。每个周期内，controller manager 根据每个 HorizontalPodAutoscaler 定义中指定的指标查询资源利用率。 controller manager 可以从 以下接口获取资源指标
 

@@ -6,7 +6,7 @@
 
 例：创建一个busybox镜像仓库
 
-![image-20200412170718186](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200412170718186.png)
+![image-20200412170718186](docker镜像仓库相关.assets/image-20200412170718186.png)
 
 
 
@@ -56,7 +56,7 @@
 
 登录阿里云——>在搜索栏输入"容器镜像服务"——[点击进入](https://cr.console.aliyun.com/cn-hangzhou/instances/repositories)
 
-![image-20200412172323217](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200412172323217.png)
+![image-20200412172323217](docker镜像仓库相关.assets/image-20200412172323217.png)
 
 ## 使用方法
 
@@ -92,7 +92,7 @@
 
 4. [获取镜像加速](https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors)
 
-   ![image-20200412173137527](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200412173137527.png)
+   ![image-20200412173137527](docker镜像仓库相关.assets/image-20200412173137527.png)
 
 # 3. Azure中国提供了gcr.io/k8s.gcr.io镜像代理服务
 
